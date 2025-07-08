@@ -1,0 +1,140 @@
+:root {
+    --gap-xs: calc(0.25 * var(--gap));
+    --gap-s: calc(0.5 * var(--gap));
+    --gap: 1rem;
+    --gap-l: calc(1.5 * var(--gap));
+    --gap-xl: calc(2 * var(--gap));
+
+    --color-bg: #1d1f27;
+    --color-fg: #dbcfc6;
+
+    --color-01: #262531;
+    --color-02: #3a375a;
+    --color-03: #514180;
+    --color-04: #6f4697;
+
+    --color-blue: #87a4e8;
+    --color-purple: #ba96d3;
+    --color-border: #675573;
+
+    --border: 1px solid var(--color-border);
+    --border-radius: 4px;
+
+    --transition: 200ms;
+}
+
+*,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+
+    padding: var(--gap-xl);
+
+    width: calc(100vw - (var(--gap-xl)*2));
+    height: calc(100vh - (var(--gap-xl)*2));
+
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    gap: var(--gap);
+}
+
+body>* {
+    border: var(--border);
+    border-radius: var(--border-radius);
+}
+
+header,
+main,
+footer {
+    padding: var(--gap);
+    background-color: var(--color-01);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-l);
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: var(--gap);
+
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: inherit;
+
+    &:visited {
+        color: inherit;
+    }
+}
+
+a {
+    color: var(--color-blue);
+}
+
+a:visited {
+    color: var(--color-purple);
+}
+
+h2,
+h3 {
+    margin-bottom: var(--gap);
+}
+
+input,
+select,
+textarea,
+button {
+    all: unset;
+    box-sizing: border-box;
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+input[type="button"],
+input[type="textarea"],
+input[type="submit"] {
+    border: var(--border);
+    border-radius: var(--border-radius);
+
+    padding: var(--gap-s);
+
+    background-color: var(--color-02);
+    transition: var(--transition);
+
+    &:hover {
+        background-color: var(--color-03);
+    }
+
+    &:active {
+        background-color: var(--color-04);
+    }
+
+    &.disabled {
+        color: #af9891;
+    }
+}
