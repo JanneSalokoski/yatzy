@@ -12,6 +12,7 @@
     --color-02: #3a375a;
     --color-03: #514180;
     --color-04: #6f4697;
+    --color-05: #944aa8;
 
     --color-blue: #87a4e8;
     --color-purple: #ba96d3;
@@ -116,7 +117,8 @@ button {
 }
 
 input[type="button"],
-input[type="textarea"],
+input[type="text"],
+input[type="password"],
 input[type="submit"] {
     border: var(--border);
     border-radius: var(--border-radius);
@@ -136,5 +138,41 @@ input[type="submit"] {
 
     &.disabled {
         color: #af9891;
+    }
+}
+
+input[type="button"],
+input[type="submit"] {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+}
+
+input[type="submit"] {
+    background-color: var(--color-03);
+
+    &:hover {
+        background-color: var(--color-04);
+    }
+
+    &:active {
+        background-color: var(--color-05);
+    }
+}
+
+form {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+
+    .label {
+        font-size: 0.9rem;
     }
 }

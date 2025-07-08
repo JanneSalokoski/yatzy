@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h2>{% if player %}Muokkaa käyttäjää{% else %}Luo käyttäjää{% endif %}</h2>
+    <form method="post">
+        <label for="name">
+            <span class="label">Nimi</span>
+            <input type="text" id="name" name="name" required value="{{ player['name'] if player else '' }}" />
+        </label>
+        <label for="password">
+            <span class="label">Salasana</span>
+            <input type="password" id="password" name="password" />
+        </label>
+
+        <input type="submit" value="{% if player %}Tallenna{% else %}Luo käyttäjä{% endif %}" />
+    </form>
+</section>
+{% endblock %}
