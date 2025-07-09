@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h2>Hakemaasi resurssia ei löydy!</h2>
+    <p>
+        Etsimälläsi haulla ei löytynyt mitään. Jos mielestäsi olisi pitänyt, ota yhteyttä <a
+            href="mailto:support@jssa.fi">support@jssa.fi</a>.
+    </p>
+    <div class="error">
+        <h3>Tekniset tiedot:</h3>
+        <p class="error-info">
+            {{ info }}
+        </p>
+    </div>
+</section>
+{% endblock %}

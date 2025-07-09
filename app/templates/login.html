@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h2>Kirjaudu</h2>
+    <form method="post" action="/login">
+        <label for="name">
+            <span class="label">Käyttäjänimi</span>
+            <input type="text" id="name" name="name" required />
+        </label>
+        <label for="password">
+            <span class="label">Salasana</span>
+            <input type="password" id="password" name="password" />
+        </label>
+
+        <input type="submit" value="Kirjaudu" />
+    </form>
+</section>
+{% endblock %}
