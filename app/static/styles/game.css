@@ -70,3 +70,7 @@ svg.die {
         background-color: var(--color-05);
     }
 }
+
+.stats ul {
+    list-style-type: none;
+}
