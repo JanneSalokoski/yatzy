@@ -74,3 +74,64 @@ svg.die {
 .stats ul {
     list-style-type: none;
 }
+
+
+.grid {
+    display: grid;
+    grid-template-columns: auto repeat(2, 1fr);
+}
+
+.grid .row {
+    display: contents;
+}
+
+.grid .cell {
+    padding: var(--gap-s);
+    border-top: var(--border);
+    border-left: var(--border);
+
+    &:last-child {
+        border-right: var(--border);
+    }
+}
+
+.grid .row:last-child .cell {
+    border-bottom: var(--border);
+}
+
+.cell.slot {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-s);
+}
+
+.cell.slot svg {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+
+    border: var(--border);
+    border-radius: var(--border-radius);
+
+    background-color: var(--color-02);
+
+    .dot {
+        fill: var(--color-fg);
+    }
+}
+
+.row:hover .cell {
+    background-color: var(--color-02);
+
+    svg {
+        background-color: var(--color-03);
+    }
+}
+
+.row.selected .cell {
+    background-color: var(--color-02);
+
+    svg {
+        background-color: var(--color-03);
+    }
+}
