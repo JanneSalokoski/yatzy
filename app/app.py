@@ -41,15 +41,13 @@ def require_auth(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         token = request.cookies.get("token")
-        logger.info(f"token: {token}")
         if not token:
-            return jsonify({"error": "Missing token"}), 401
+            return redirect(url_for("login"))
 
         player_id = decode_token(token)
-        logger.info(f"player_id: {player_id}")
 
         if not player_id:
-            return jsonify({"error": "Invalid or expired token"}), 401
+            return redirect(url_for("login"))
 
         g.player_id = player_id
         return func(*args, **kwargs)
@@ -74,6 +72,13 @@ def close_db(error):
     db = g.pop("db", None)
     if db is not None:
         db.close()
+
+
+@app.context_processor
+def inject_auth_status():
+    token = request.cookies.get("token")
+    player_id = decode_token(token) if token else None
+    return {"logged_in": player_id is not None, "player_id": player_id}
 
 
 @app.route("/")
@@ -112,44 +117,19 @@ def logout():
     return response
 
 
-@app.route("/player", methods=["GET"])
-@db_cursor
-def create_user(cur=None, conn=None):
-    return render_template("player_form.html", player=None)
-
-
-@app.route("/player", methods=["POST"])
+@app.route("/profile", methods=["GET", "POST"])
 @require_auth
 @db_cursor
-def create_player(cur=None, conn=None):
-    name = request.form["name"]
-    slug = create_slug(name)
-    password = request.form["password"]
+def edit_profile(cur=None, conn=None):
+    if request.method == "GET":
+        player_id = g.player_id
+        cur.execute("SELECT id, slug, name FROM players WHERE id = %s", (player_id,))
+        player = cur.fetchone()
 
-    if not password:
-        return {"error": "Password required"}, 400
+        if not player:
+            return 404
 
-    hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-
-    query = "INSERT INTO players (slug, name, hash) VALUES (%s, %s, %s)"
-    cur.execute(query, (slug, name, hash))
-
-    conn.commit()
-    return redirect(url_for("create_or_edit_player", player_slug=slug))
-
-
-@app.route("/player/<string:player_slug>", methods=["GET", "POST"])
-@require_auth
-@db_cursor
-def create_or_edit_player(cur=None, conn=None, player_slug=None):
-    cur.execute("SELECT id, slug, name FROM players WHERE slug = %s", (player_slug,))
-    player = cur.fetchone()
-
-    print("player", player)
-    print("player_id", g.player_id)
-
-    if not player or int(g.player_id) != player["id"]:
-        return {"error": "Unauthorized"}, 403
+        return render_template("player_form.html", player=player)
 
     if request.method == "POST":
         name = request.form["name"]
@@ -165,9 +145,45 @@ def create_or_edit_player(cur=None, conn=None, player_slug=None):
             cur.execute(query, (name, slug))
 
         conn.commit()
-        return redirect(url_for("create_or_edit_player", player_slug=slug))
+        return redirect(url_for("edit_profile"))
 
-    return render_template("player_form.html", player=player)
+
+@app.route("/signup", methods=["GET", "POST"])
+@db_cursor
+def signup(cur=None, conn=None):
+    if request.method == "GET":
+        return render_template("player_form.html", player=None)
+
+    name = request.form["name"]
+    slug = create_slug(name)
+    password = request.form["password"]
+
+    if not password:
+        return {"error": "Password required"}, 400
+
+    hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+    query = "INSERT INTO players (slug, name, hash) VALUES (%s, %s, %s)"
+    cur.execute(query, (slug, name, hash))
+
+    conn.commit()
+    return redirect(url_for("login", player_slug=slug))
+
+
+@app.route("/player/<string:player_slug>", methods=["GET"])
+@db_cursor
+def view_player(cur=None, conn=None, player_slug=None):
+    cur.execute(
+        "SELECT slug, name, created_at FROM players WHERE slug = %s", (player_slug,)
+    )
+    player = cur.fetchone()
+
+    if not player:
+        return render_template(
+            "404.html", info=f"Pelaajaa ei löydy tunnisteella '{player_slug}'"
+        ), 404
+
+    return render_template("player_public.html", player=player)
 
 
 @app.route("/status")

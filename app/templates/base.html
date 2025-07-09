@@ -21,9 +21,16 @@
         <nav>
             <ul>
                 <li><h1><a href="/">Yatzy</a></h1></li>
-                <li><a href="/info">Info</a></li>
-                <li><a href="/user">Käyttäjä</a></li>
+                <li><a href="/leaderboard">Tilastot</a></li>
                 <li><a href="/news">Uutiset</a></li>
+                <li class="spacer"></li>
+                {% if logged_in %}
+                <li><a href="/profile">Profiili</a></li>
+                <li><a href="/logout">Kirjaudu ulos</a></li>
+                {% else %}
+                <li><a href="/login">Kirjaudu sisään</a></li>
+                <li><a href="/signup">Luo uusi käyttäjä</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
