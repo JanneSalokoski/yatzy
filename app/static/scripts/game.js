@@ -1,3 +1,9 @@
+let my_turn = true;
+
+let throws_left = 3;
+
+let curr_score = 0;
+
 let die_values = {
     "die-1": { value: 0, locked: false },
     "die-2": { value: 0, locked: false },
@@ -180,6 +186,7 @@ function calculate_score(slot, values) {
 
 
 function update_stats() {
+    const throws_element = document.querySelector(".throws-left .value");
     const selected_element = document.querySelector(".selected .value");
     const sum_element = document.querySelector(".sum .value");
     const locked_sum_element = document.querySelector(".locked-sum .value");
@@ -208,6 +215,9 @@ function update_stats() {
             .map(val => val.value)
     )
 
+    curr_score = current_score;
+
+    throws_element.textContent = throws_left;
     selected_element.textContent = selected_slot_name;
     sum_element.textContent = sum;
     locked_sum_element.textContent = locked_sum;
@@ -230,7 +240,14 @@ async function init() {
         e.preventDefault();
 
         await Promise.all(dice.map(die => throw_die(die, die_faces)));
+
+        throws_left = Math.max(0, throws_left - 1);
+        if (throws_left === 0) {
+            throw_button.disabled = true;
+        }
+
         update_stats();
+
     }
 
     const rows = get_rows();
@@ -248,6 +265,15 @@ async function init() {
             update_stats();
         })
     })
+
+    const allocate_button = document.querySelector("#allocate");
+    allocate_button.onclick = () => {
+        const selected_row = document.querySelector(`.row.${selected_slot}`);
+        selected_row.querySelector(".score").textContent = curr_score;
+
+        throws_left = 3;
+        throw_button.disabled = false;
+    }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
