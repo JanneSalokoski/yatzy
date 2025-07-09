@@ -195,5 +195,16 @@ def status(cur=None, conn=None):
     return f"Connected to DB: {db_version[0]}"
 
 
+@app.route("/game")
+@db_cursor
+@require_auth
+def game(cur=None, conn=None):
+    cur.execute(
+        "SELECT slug, name, created_at FROM players WHERE id = %s", (g.player_id,)
+    )
+    player = cur.fetchone()
+    return render_template("game.html", player=player)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
