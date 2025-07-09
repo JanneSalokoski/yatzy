@@ -148,8 +148,19 @@ input[type="submit"] {
         background-color: var(--color-04);
     }
 
-    &.disabled {
+    &:disabled {
         color: #af9891;
+        background-color: var(--color-01);
+
+        &:hover {
+            color: #af9891;
+            background-color: var(--color-01);
+        }
+
+        &:active {
+            color: #af9891;
+            background-color: var(--color-01);
+        }
     }
 }
 
