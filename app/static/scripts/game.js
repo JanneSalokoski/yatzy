@@ -6,6 +6,8 @@ let die_values = {
     "die-5": { value: 0, locked: false },
 };
 
+let selected_slot = "";
+
 async function load_svg(face) {
     const res = await fetch(`/static/svg/die-${face}.svg`);
     return await res.text();
@@ -107,6 +109,10 @@ function update_stats() {
     max_sum_element.textContent = max_sum;
 }
 
+function get_rows() {
+    return document.querySelectorAll(".row");
+}
+
 async function init() {
     const die_faces = await Promise.all(load_die_faces());
     const dice = get_dice();
@@ -120,6 +126,20 @@ async function init() {
         await Promise.all(dice.map(die => throw_die(die, die_faces)));
         update_stats();
     }
+
+    const rows = get_rows();
+    rows.forEach(row => {
+        row.addEventListener("click", () => {
+            selected_slot = row.id !== selected_slot ? row.id : "";
+            rows.forEach(r => {
+                if (r.id == selected_slot) {
+                    r.classList.add("selected");
+                } else {
+                    r.classList.remove("selected");
+                }
+            })
+        })
+    })
 }
 
 window.addEventListener("DOMContentLoaded", () => {
