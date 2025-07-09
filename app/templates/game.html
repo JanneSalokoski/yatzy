@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/game.css') }}" />
+{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Peli</h2>
+    <div class="game">
+        <div class="grid">
+        </div>
+        <div class="throw">
+            <div class="dice">
+            <div class="die" id="die-1">1</div>
+            <div class="die" id="die-2">2</div>
+            <div class="die" id="die-3">3</div>
+            <div class="die" id="die-4">4</div>
+            <div class="die" id="die-5">5</div>
+            </div>
+            <input name="throw" id="throw" type="button" value="heitä" />
+        </div>
+    </div>
+</section>
+<script>
+    console.log("Inline JS works");
+</script>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='scripts/game.js') }}"></script>
+{% endblock %}
