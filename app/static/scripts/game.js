@@ -8,6 +8,24 @@ let die_values = {
 
 let selected_slot = "";
 
+const slot_names = {
+    "ones": "ykköset",
+    "twos": "kakkoset",
+    "threes": "kolmoset",
+    "fours": "neloset",
+    "fives": "vitoset",
+    "sixes": "kutoset",
+    "pair": "pari",
+    "three-of-a-kind": "kolme samaa",
+    "four-of-a-kind": "neljä samaa",
+    "two-pairs": "kaksi paria",
+    "small-flush": "pieni suora",
+    "big-flush": "iso suora",
+    "full-house": "täyskäsi",
+    "random": "sattuma",
+    "yatzy": "yatzy",
+}
+
 async function load_svg(face) {
     const res = await fetch(`/static/svg/die-${face}.svg`);
     return await res.text();
@@ -84,10 +102,91 @@ function get_dice() {
     return dice;
 }
 
+function get_group_total(length, values) {
+    const counts = {};
+    values.forEach(v => counts[v] = (counts[v] || 0) + 1);
+
+    let groups = Object.entries(counts)
+        .filter(([num, count]) => count >= length)
+        .map(([num]) => parseInt(num));
+
+    if (groups.length === 0) return 0;
+
+    return Math.max(...groups) * length;
+}
+
+function is_straight(values, expected) {
+    const sorted = [...values].sort((a, b) => a - b);
+    return sorted.length === expected.length &&
+        sorted.every((val, i) => val === expected[i]);
+}
+
+function calculate_score(slot, values) {
+    console.log(slot, values);
+    switch (slot) {
+        case 'ones':
+            return values.filter(v => v == 1).length;
+        case 'twos':
+            return values.filter(v => v == 2).length * 2;
+        case 'threes':
+            return values.filter(v => v == 3).length * 3;
+        case 'fours':
+            return values.filter(v => v == 4).length * 4;
+        case 'fives':
+            return values.filter(v => v == 5).length * 5;
+        case 'sixes':
+            return values.filter(v => v == 6).length * 6;
+
+        case 'pair':
+            return get_group_total(2, values);
+        case 'three-of-a-kind':
+            return get_group_total(3, values);
+        case 'four-of-a-kind':
+            return get_group_total(4, values);
+
+        case 'full-house':
+            let three = get_group_total(3, values);
+            if (three === 0) {
+                return 0;
+            }
+
+            let three_val = Math.round(three / 3);
+            let pair_vals = values.filter(v => v !== three_val);
+
+            let pair = get_group_total(2, pair_vals);
+
+            if (pair === 0) {
+                return 0;
+            }
+
+            return pair + three;
+
+        case 'small-flush':
+            return (is_straight(values, [1, 2, 3, 4, 5])) ? 15 : 0;
+
+        case 'big-flush':
+            return (is_straight(values, [2, 3, 4, 5, 6])) ? 20 : 0;
+
+        case 'random':
+            return values.reduce((total, v) => total + v);
+
+        case 'yatzy':
+            return values.every(v => v === values[1]) ? 50 : 0;
+
+        default:
+            return 0;
+    }
+}
+
+
 function update_stats() {
+    const selected_element = document.querySelector(".selected .value");
     const sum_element = document.querySelector(".sum .value");
     const locked_sum_element = document.querySelector(".locked-sum .value");
     const max_sum_element = document.querySelector(".max-sum .value");
+    const score_element = document.querySelector(".score .value");
+
+    const selected_slot_name = slot_names[selected_slot];
 
     const sum = Object.values(die_values)
         .map(val => val.value)
@@ -104,9 +203,16 @@ function update_stats() {
 
     const max_sum = locked_sum + free * 6;
 
+    const current_score = calculate_score(selected_slot,
+        Object.values(die_values)
+            .map(val => val.value)
+    )
+
+    selected_element.textContent = selected_slot_name;
     sum_element.textContent = sum;
     locked_sum_element.textContent = locked_sum;
     max_sum_element.textContent = max_sum;
+    score_element.textContent = current_score;
 }
 
 function get_rows() {
@@ -130,6 +236,7 @@ async function init() {
     const rows = get_rows();
     rows.forEach(row => {
         row.addEventListener("click", () => {
+            console.log(row);
             selected_slot = row.id !== selected_slot ? row.id : "";
             rows.forEach(r => {
                 if (r.id == selected_slot) {
@@ -137,7 +244,8 @@ async function init() {
                 } else {
                     r.classList.remove("selected");
                 }
-            })
+            });
+            update_stats();
         })
     })
 }
