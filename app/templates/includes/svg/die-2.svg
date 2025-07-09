@@ -1,0 +1,4 @@
+<svg class="die" viewBox="0 0 100 100">
+    <circle class="dot" cx="33" cy="50" r="10" />
+    <circle class="dot" cx="66" cy="50" r="10" />
+</svg>

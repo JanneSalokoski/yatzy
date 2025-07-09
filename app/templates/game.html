@@ -10,6 +10,165 @@
     <h2>Peli</h2>
     <div class="game">
         <div class="grid">
+            <div class="row ones" id="ones">
+                <div class="cell slot">
+                    {% include "includes/svg/die-1.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row twos" id="twos">
+                <div class="cell slot">
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-2.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row threes" id="threes">
+                <div class="cell slot">
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row fours" id="fours">
+                <div class="cell slot">
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row fives" id="fives">
+                <div class="cell slot">
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row sixes" id="sixes">
+                <div class="cell slot">
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row subtotal" id="subtotal">
+                <div class="cell slot">
+                    Välisumma
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row bonus" id="bonus">
+                <div class="cell slot">
+                    Bonus
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row pair" id="pair">
+                <div class="cell slot">
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-2.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row three-of-a-kind" id="three-of-a-kind">
+                <div class="cell slot">
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row four-of-a-kind" id="four-of-a-kind">
+                <div class="cell slot">
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row two-pairs" id="two-pairs">
+                <div class="cell slot">
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row small-flush" id="small-flush">
+                <div class="cell slot">
+                    {% include "includes/svg/die-1.svg" %}
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row big-flush" id="big-flush">
+                <div class="cell slot">
+                    {% include "includes/svg/die-2.svg" %}
+                    {% include "includes/svg/die-3.svg" %}
+                    {% include "includes/svg/die-4.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row full-house" id="full-house">
+                <div class="cell slot">
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-5.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                    {% include "includes/svg/die-6.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row random" id="random">
+                <div class="cell slot">
+                    Sattuma
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
+            <div class="row yatzy" id="yatzy">
+                <div class="cell slot">
+                    {% include "includes/svg/die-1.svg" %}
+                    {% include "includes/svg/die-1.svg" %}
+                    {% include "includes/svg/die-1.svg" %}
+                    {% include "includes/svg/die-1.svg" %}
+                    {% include "includes/svg/die-1.svg" %}
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
         </div>
         <div class="throw">
             <div class="dice">
