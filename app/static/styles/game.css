@@ -1,0 +1,72 @@
+.game,
+.throw {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--gap);
+}
+
+.dice {
+    display: flex;
+
+    gap: var(--gap);
+}
+
+.dot {
+    transition: opacity 1s ease;
+    fill: var(--color-01);
+}
+
+div.die {
+    background-color: var(--color-fg);
+    border: var(--border);
+    border-color: var(--color-fg);
+    border-radius: var(--border-radius);
+
+    width: 2rem;
+    height: 2rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.rolling {
+        color: #888;
+        background-color: var(--color-gray);
+        border-color: var(--color-gray);
+
+        svg.die {
+            background-color: var(--color-gray);
+
+            transition: opacity 1s ease;
+
+            &.fade-in .dot {
+                opacity: 0.8;
+            }
+
+            .dot {
+                opacity: 0.6;
+                fill: var(--color-01);
+            }
+        }
+    }
+}
+
+svg.die {
+    background-color: var(--color-fg);
+
+    transition: opacity 1s ease;
+
+    &.fade-in .dot {
+        opacity: 1;
+    }
+}
+
+.die.selected {
+    background-color: var(--color-05);
+    border-color: var(--color-05);
+
+    svg.die {
+        background-color: var(--color-05);
+    }
+}
