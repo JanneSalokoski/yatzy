@@ -11,8 +11,9 @@ const SLOTS = [
     "pair",
     "three-of-a-kind",
     "four-of-a-kind",
-    "small-straight",
-    "big-straight",
+    "two-pairs",
+    "small-flush",
+    "big-flush",
     "full-house",
     "random",
     "yatzy",
@@ -23,7 +24,7 @@ function sum(list) {
     return list.reduce((total, a) => total + a, 0);
 }
 
-function rng(min, max) {
+export function rng(min, max) {
     // Returns a random number generator for the
     // inclusive range between min and max
 
@@ -98,6 +99,17 @@ class Player {
 
         this._scores[slot] = value;
     }
+
+    get_score(slot) {
+        if (!Object.prototype.hasOwnProperty.call(this._scores, slot)) {
+            console.error("Known slots:", Object.keys(this._scores));
+            console.error("Tried slot:", slot);
+            throw new ReferenceError(`Slot '${slot}' does not exist`);
+        }
+
+        return this._scores[slot];
+    }
+
 
     load_scores_from_json(json_data) {
         // Tries to set a score slot for every key in `json_data`
@@ -183,7 +195,7 @@ const scoreMap = {
     "yatzy": vals => vals.every(v => v === vals[0]) ? 50 : 0
 };
 
-function calculate_score(slot, values) {
+export function calculate_score(slot, values) {
     return scoreMap[slot]?.(values) ?? 0;
 }
 
@@ -252,22 +264,28 @@ export class GameLogic {
         this.current_player = (this.current_player + 1) % this.players.length;
     }
 
+
     *_turn_generator() {
         let rolls = 0;
+        let rolled_once = false;
 
         while (rolls < MAX_THROWS) {
             yield {
                 roll: () => {
                     rolls++;
-                    return {
-                        values: this._roll_dice(),
-                        done: false
-                    };
+                    rolled_once = true;
+                    return { values: this._roll_dice(), done: false };
                 },
-                allocate: null
+                allocate: rolled_once
+                    ? (slot) => {
+                        this._allocate(slot);
+                        return { done: true };
+                    }
+                    : null
             };
         }
 
+        // Final step: only allocation allowed
         yield {
             roll: null,
             allocate: (slot) => {
@@ -276,6 +294,8 @@ export class GameLogic {
             }
         };
     }
+
+
 
 
     start_turn() {
@@ -289,6 +309,7 @@ export class GameLogic {
         }
 
         const result = this._step.value.roll();
+        this.throws_left = Math.max(this.throws_left - 1, 0);
         this._step = this._turn.next();
         return result.values;
     }
@@ -302,6 +323,14 @@ export class GameLogic {
         this._step = null;
 
         return result.done;
+    }
+
+    can_roll() {
+        return !!this._step?.value?.roll;
+    }
+
+    can_allocate() {
+        return !!this._step?.value?.allocate;
     }
 }
 
