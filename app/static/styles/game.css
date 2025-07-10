@@ -112,6 +112,22 @@ svg.die {
     justify-content: center;
 }
 
+.grid .extra {
+    color: var(--color-red);
+    font-size: 0.8rem;
+    margin-left: var(--gap-xs);
+
+    display: inline-flex;
+    place-content: center;
+
+    place-items: center;
+    place-self: center;
+
+    &.green {
+        color: var(--color-green);
+    }
+}
+
 .grid .row:last-child .cell {
     border-bottom: var(--border);
 }

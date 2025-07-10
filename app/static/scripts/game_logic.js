@@ -73,6 +73,21 @@ class Player {
         this._init_scores();
     }
 
+    get subtotal() {
+        const selected_slots = SLOTS.slice(0, 6);
+        return sum(Object.entries(this._scores)
+            .filter(([slot, _]) => selected_slots.includes(slot))
+            .map(([_, value]) => value ?? 0));
+    }
+
+    get total() {
+        return sum(Object.values(this._scores).map(v => v ?? 0)) + (this.bonus ? 50 : 0);
+    }
+
+    get bonus() {
+        return this.subtotal >= 63;
+    }
+
     _init_scores() {
         // Initializes `this._scores` with all the keys from
         // `SLOTS` as undefined
@@ -164,11 +179,11 @@ function is_straight(values, expected) {
 
 const scoreMap = {
     "ones": vals => vals.filter(v => v === 1).length,
-    "twos": vals => vals.filter(v => v === 1).length * 2,
-    "threes": vals => vals.filter(v => v === 1).length * 3,
-    "fours": vals => vals.filter(v => v === 1).length * 4,
-    "fives": vals => vals.filter(v => v === 1).length * 5,
-    "sixes": vals => vals.filter(v => v === 1).length * 6,
+    "twos": vals => vals.filter(v => v === 2).length * 2,
+    "threes": vals => vals.filter(v => v === 3).length * 3,
+    "fours": vals => vals.filter(v => v === 4).length * 4,
+    "fives": vals => vals.filter(v => v === 5).length * 5,
+    "sixes": vals => vals.filter(v => v === 6).length * 6,
 
     "pair": vals => get_group_total(2, vals),
     "three-of-a-kind": vals => get_group_total(3, vals),

@@ -45,6 +45,13 @@
             </div>
         </div>
         <div class="grid">
+            <div class="row players" id="players">
+                <div class="cell slot">
+                    Pelaaja
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
+            </div>
             <div class="row slot ones" id="ones">
                 <div class="cell slot">
                     {% include "includes/svg/die-1.svg" %}
@@ -204,7 +211,6 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-        </div>
             <div class="row total" id="total">
                 <div class="cell slot">
                     Tulos
@@ -212,6 +218,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
+        </div>
     </div>
 </section>
 {% endblock %}

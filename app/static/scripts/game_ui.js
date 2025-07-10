@@ -164,9 +164,31 @@ export class GameUI {
             return;
         }
 
+        const player_slots = document.querySelectorAll(".row#players .score");
+        const subtotal_slots = document.querySelectorAll(".row#subtotal .score");
+        const bonus_slots = document.querySelectorAll(".row#bonus .score");
+        const total_slots = document.querySelectorAll(".row#total .score");
+
+        const winning_total = Math.max(...this.game.players.map(p => p.total))
+
+        this.game.players.forEach((player, i) => {
+            player_slots[i].textContent = player.name;
+            subtotal_slots[i].innerHTML = `<span class='value'>${player.subtotal}</span> <span class='extra ${(player.subtotal - 63) >= 0 ? "green" : ""}'>(${player.subtotal - 63})</span>`;
+            bonus_slots[i].textContent = player.bonus ? "50" : "";
+            total_slots[i].innerHTML = `<span class='value'>${player.total}</span><span class='extra ${(player.total - winning_total) >= 0 ? "green" : ""}'>(${player.total - winning_total})</span>`;
+        })
+
+
         this.rows.forEach((row) => {
             row.querySelectorAll(".cell.score").forEach((cell, i) => {
-                cell.textContent = this.game.players[i].get_score([row.id]) || "";
+                const val = this.game.players[i].get_score(row.id);
+                if (val === undefined) {
+                    cell.textContent = "";
+                } else if (val === 0) {
+                    cell.textContent = "--";
+                } else {
+                    cell.textContent = val;
+                }
             })
         })
     }
