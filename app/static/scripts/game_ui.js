@@ -173,6 +173,23 @@ export class GameUI {
     update_grid() {
         if (this.game.status === "pending") return;
 
+        const current_player_mnt = this.rows[0].querySelectorAll(".score").length;
+
+        const difference = this.game.players.length - current_player_mnt;
+
+        if (difference > 0) {
+            document.querySelectorAll(".row").forEach(row => {
+                for (let i = 0; i < difference; i++) {
+                    const elem = document.createElement("div");
+                    elem.className = "cell score";
+
+                    row.appendChild(elem);
+                }
+            });
+        }
+
+        document.querySelector(":root").style.setProperty("--player-amount", this.game.players.length);
+
         const player_slots = document.querySelectorAll(".row#players .score");
         const subtotal_slots = document.querySelectorAll(".row#subtotal .score");
         const bonus_slots = document.querySelectorAll(".row#bonus .score");

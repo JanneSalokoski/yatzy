@@ -91,7 +91,7 @@ svg.die {
 
 .grid {
     display: grid;
-    grid-template-columns: auto repeat(2, 1fr);
+    grid-template-columns: auto repeat(var(--player-amount), 1fr);
 }
 
 .grid .row {
