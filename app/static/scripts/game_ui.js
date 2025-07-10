@@ -152,7 +152,7 @@ export class GameUI {
         const active_player = this.game.players[this.game.current_player];
         const slot_already_used = !this.selected_slot || active_player.get_score(this.selected_slot) !== undefined;
 
-        allocate_btn.disabled = !this.game.can_allocate() || !this.selected_slot || slot_already_used;
+        allocate_btn.disabled = this.game.status !== "started" || !this.game.can_allocate() || !this.selected_slot || slot_already_used;
     }
 
 
@@ -264,6 +264,8 @@ export class GameUI {
             "locked-sum": sum(locked),
             "max-sum": sum(locked) + free.length * 6,
             "score": calculate_score(this.selected_slot, all),
+            "leader": this.game.leaders.map(p => p.name).join(", "),
+            "winner": this.game.status === "finished" ? this.game.leaders.map(p => p.name).join(", ") : ""
         };
 
         for (const [key, val] of Object.entries(statMap)) {

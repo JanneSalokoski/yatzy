@@ -88,6 +88,10 @@ class Player {
         return this.subtotal >= 63;
     }
 
+    get finished() {
+        return SLOTS.length === Object.values(this._scores).filter(k => k !== undefined).length;
+    }
+
     _init_scores() {
         // Initializes `this._scores` with all the keys from
         // `SLOTS` as undefined
@@ -243,6 +247,13 @@ export class GameLogic {
         return Array.from({ length: count }, () => new Die())
     }
 
+    get leaders() {
+        if (this.players.length === 0) return null;
+
+        const max = Math.max(...this.players.map(p => p.total));
+        return this.players.filter(p => p.total === max);
+    }
+
     add_player(name) {
         this.players.push(new Player(name));
     }
@@ -288,7 +299,14 @@ export class GameLogic {
             d.locked = false;
         });
 
-        this.current_player = (this.current_player + 1) % this.players.length;
+        const game_finished = this.players.every(p => p.finished === true);
+
+        if (game_finished) {
+            this.status = "finished";
+            this.current_player = undefined;
+        } else {
+            this.current_player = (this.current_player + 1) % this.players.length;
+        }
     }
 
 
