@@ -70,6 +70,13 @@ export class GameUI {
 
         rows.forEach(row => {
             row.addEventListener("click", () => {
+                const slot_id = row.id;
+                const player = this.game.players[this.game.current_player];
+
+                if (player.get_score(slot_id) !== undefined) {
+                    return;
+                }
+
                 this.selected_slot = (row.id !== this.selected_slot) ? row.id : "";
 
                 rows.forEach(r => {
@@ -142,7 +149,10 @@ export class GameUI {
         throw_btn.disabled = !this.game.can_roll();
 
         // Allow allocation if allowed and slot selected
-        allocate_btn.disabled = !this.game.can_allocate() || !this.selected_slot;
+        const active_player = this.game.players[this.game.current_player];
+        const slot_already_used = !this.selected_slot || active_player.get_score(this.selected_slot) !== undefined;
+
+        allocate_btn.disabled = !this.game.can_allocate() || !this.selected_slot || slot_already_used;
     }
 
 
