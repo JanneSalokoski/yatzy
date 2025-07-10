@@ -1,0 +1,214 @@
+.game,
+.throw {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--gap);
+}
+
+.throw {
+    align-items: center;
+
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--gap);
+
+    .buttons {
+        display: flex;
+        gap: var(--gap-s);
+    }
+}
+
+.dice {
+    display: flex;
+
+    gap: var(--gap);
+}
+
+.dot {
+    transition: opacity 1s ease;
+    fill: var(--color-01);
+}
+
+div.die {
+    background-color: var(--color-fg);
+    border: var(--border);
+    border-color: var(--color-fg);
+    border-radius: var(--border-radius);
+
+    width: 2rem;
+    height: 2rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.rolling {
+        color: #888;
+        background-color: var(--color-gray);
+        border-color: var(--color-gray);
+
+        svg.die {
+            background-color: var(--color-gray);
+
+            transition: opacity 1s ease;
+
+            &.fade-in .dot {
+                opacity: 0.8;
+            }
+
+            .dot {
+                opacity: 0.6;
+                fill: var(--color-01);
+            }
+        }
+    }
+}
+
+svg.die {
+    background-color: var(--color-fg);
+
+    transition: opacity 1s ease;
+
+    &.fade-in .dot {
+        opacity: 1;
+    }
+}
+
+.die.locked {
+    background-color: var(--color-05);
+    border-color: var(--color-05);
+
+    svg.die {
+        background-color: var(--color-05);
+    }
+}
+
+.stats ul {
+    list-style-type: none;
+}
+
+
+.grid {
+    display: grid;
+    grid-template-columns: auto repeat(var(--player-amount), 1fr);
+}
+
+.grid .row {
+    display: contents;
+}
+
+.grid .cell {
+    padding: var(--gap-s);
+    border-top: var(--border);
+    border-left: var(--border);
+
+    &:last-child {
+        border-right: var(--border);
+    }
+
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.grid .extra {
+    color: var(--color-red);
+    font-size: 0.8rem;
+    margin-left: var(--gap-xs);
+
+    display: inline-flex;
+    place-content: center;
+
+    place-items: center;
+    place-self: center;
+
+    &.green {
+        color: var(--color-green);
+    }
+}
+
+.grid .row:last-child .cell {
+    border-bottom: var(--border);
+}
+
+.cell.slot {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-s);
+}
+
+.cell.slot svg {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+
+    border: var(--border);
+    border-radius: var(--border-radius);
+
+    background-color: var(--color-02);
+
+    .dot {
+        fill: var(--color-fg);
+    }
+}
+
+.row#players .cell,
+.row#subtotal .cell,
+.row#bonus .cell,
+.row#total .cell {
+    background-color: #1e1d27;
+}
+
+
+.row:hover .cell {
+    background-color: #201f29;
+
+    svg {
+        background-color: var(--color-03);
+    }
+}
+
+.row.selected .cell {
+    background-color: #201f29;
+
+    svg {
+        background-color: var(--color-03);
+    }
+}
+
+.cell.active {
+    background-color: #1e1d27;
+}
+
+.row#players .cell.active {
+    background-color: var(--color-02);
+}
+
+.controls {
+    display: grid;
+    gap: var(--gap-s);
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+
+    label {
+        grid-column: 1 / span 2;
+    }
+}
+
+.stats {
+    background-color: var(--color-bg);
+    padding: var(--gap);
+
+    border-radius: var(--border-radius);
+
+    font-family: monospace;
+    line-height: 1.5;
+}
+
+.preview {
+    color: var(--color-blue);
+    font-size: 0.8rem;
+    opacity: 0.6;
+}

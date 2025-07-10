@@ -8,6 +8,7 @@
     <title>Yatzy - {{ page_title or "" }}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}" />
+    {% block extra_css %}{% endblock %}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +44,8 @@
     <footer>
         &copy; Janne Salokoski 2025
     </footer>
+
+    {% block extra_js %}{% endblock %}
 </body>
 
 </html>
