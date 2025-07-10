@@ -169,51 +169,55 @@ export class GameUI {
         });
     }
 
+
     update_grid() {
-        if (this.game.status === "pending") {
-            return;
-        }
+        if (this.game.status === "pending") return;
 
         const player_slots = document.querySelectorAll(".row#players .score");
         const subtotal_slots = document.querySelectorAll(".row#subtotal .score");
         const bonus_slots = document.querySelectorAll(".row#bonus .score");
         const total_slots = document.querySelectorAll(".row#total .score");
 
-        const winning_total = Math.max(...this.game.players.map(p => p.total))
+        const winning_total = Math.max(...this.game.players.map(p => p.total));
+
+        const set_html = (el, html) => el.innerHTML = html;
+        const set_active_class = (el, active) =>
+            el.classList.toggle("active", active);
 
         this.game.players.forEach((player, i) => {
+            const isActive = this.game.current_player === i;
+
             player_slots[i].textContent = player.name;
-            subtotal_slots[i].innerHTML = `<span class='value'>${player.subtotal}</span> <span class='extra ${(player.subtotal - 63) >= 0 ? "green" : ""}'>(${player.subtotal - 63})</span>`;
+            set_active_class(player_slots[i], isActive);
+
+            set_html(subtotal_slots[i],
+                `<span class='value'>${player.subtotal}</span>
+             <span class='extra ${(player.subtotal - 63) >= 0 ? "green" : ""}'>
+                (${player.subtotal - 63})
+             </span>`);
+
             bonus_slots[i].textContent = player.bonus ? "50" : "";
-            total_slots[i].innerHTML = `<span class='value'>${player.total}</span><span class='extra ${(player.total - winning_total) >= 0 ? "green" : ""}'>(${player.total - winning_total})</span>`;
 
-            if (this.game.current_player == i) {
-                player_slots[i].classList.add("active");
-            } else {
-                player_slots[i].classList.remove("active");
-            }
-        })
-
+            set_html(total_slots[i],
+                `<span class='value'>${player.total}</span>
+             <span class='extra ${(player.total - winning_total) >= 0 ? "green" : ""}'>
+                (${player.total - winning_total})
+             </span>`);
+        });
 
         this.rows.forEach((row) => {
-            row.querySelectorAll(".cell.score").forEach((cell, i) => {
-                const val = this.game.players[i].get_score(row.id);
-                if (val === undefined) {
-                    cell.textContent = "";
-                } else if (val === 0) {
-                    cell.textContent = "--";
-                } else {
-                    cell.textContent = val;
-                }
+            const slot_id = row.id;
 
-                if (this.game.current_player == i) {
-                    cell.classList.add("active");
-                } else {
-                    cell.classList.remove("active");
-                }
-            })
-        })
+            row.querySelectorAll(".cell.score").forEach((cell, i) => {
+                const score = this.game.players[i].get_score(slot_id);
+                cell.textContent = score === undefined ? "" : (score === 0 ? "--" : score);
+
+                const isActive = this.game.current_player === i;
+                set_active_class(cell, isActive);
+            });
+        });
     }
+
 
 
     update_stats() {
