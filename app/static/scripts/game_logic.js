@@ -189,6 +189,18 @@ const scoreMap = {
     "three-of-a-kind": vals => get_group_total(3, vals),
     "four-of-a-kind": vals => get_group_total(4, vals),
 
+    "two-pairs": vals => {
+        const first = get_group_total(2, vals);
+        if (!first) return 0;
+
+        const first_val = first / 2;
+        const others = vals.filter(v => v !== first_val);
+
+        const second = get_group_total(2, others);
+
+        return first ? first + second : 0;
+    },
+
     "small-flush": vals => is_straight(vals, [1, 2, 3, 4, 5]) ? 15 : 0,
     "big-flush": vals => is_straight(vals, [2, 3, 4, 5, 6]) ? 20 : 0,
 
