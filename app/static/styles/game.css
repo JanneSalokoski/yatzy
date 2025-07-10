@@ -153,8 +153,16 @@ svg.die {
     }
 }
 
+.row#players .cell,
+.row#subtotal .cell,
+.row#bonus .cell,
+.row#total .cell {
+    background-color: #1e1d27;
+}
+
+
 .row:hover .cell {
-    background-color: var(--color-02);
+    background-color: #201f29;
 
     svg {
         background-color: var(--color-03);
@@ -162,11 +170,19 @@ svg.die {
 }
 
 .row.selected .cell {
-    background-color: var(--color-02);
+    background-color: #201f29;
 
     svg {
         background-color: var(--color-03);
     }
+}
+
+.cell.active {
+    background-color: #1e1d27;
+}
+
+.row#players .cell.active {
+    background-color: var(--color-02);
 }
 
 .controls {

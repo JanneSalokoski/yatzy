@@ -5,28 +5,26 @@
     --gap-l: calc(1.5 * var(--gap));
     --gap-xl: calc(2 * var(--gap));
 
-    --color-bg: #1d1f27;
-    --color-fg: #dbcfc6;
+    --color-bg: #131418;
+    --color-fg: #c2b6ad;
 
-    --color-01: #262531;
-    --color-02: #3a375a;
-    --color-03: #514180;
-    --color-04: #6f4697;
-    --color-05: #944aa8;
+    --color-01: #1a191e;
+    --color-02: #29273c;
+    --color-03: #413660;
+    --color-04: #573d7b;
+    --color-05: #7a5c99;
 
     --color-blue: #87a4e8;
     --color-purple: #ba96d3;
     --color-red: #df7474;
     --color-green: #64d5ab;
-
-    --color-border: #675573;
-
-    --color-gray: #bbb6b2;
+    --color-border: #2d2731;
+    --color-gray: #c6c0bb;
 
     --border: 1px solid var(--color-border);
     --border-radius: 4px;
 
-    --transition: 200ms;
+    --transition: 50ms;
 }
 
 *,
@@ -135,6 +133,7 @@ input[type="text"],
 input[type="password"],
 input[type="submit"] {
     border: var(--border);
+    border-color: var(--color-02);
     border-radius: var(--border-radius);
 
     padding: var(--gap-s);
@@ -143,26 +142,19 @@ input[type="submit"] {
     transition: var(--transition);
 
     &:hover {
-        background-color: var(--color-03);
+        background-color: var(--color-02);
+        border-color: var(--color-03);
+
     }
 
     &:active {
-        background-color: var(--color-04);
+        background-color: var(--color-03);
+        border-color: var(--color-04);
     }
 
     &:disabled {
-        color: #af9891;
-        background-color: var(--color-01);
-
-        &:hover {
-            color: #af9891;
-            background-color: var(--color-01);
-        }
-
-        &:active {
-            color: #af9891;
-            background-color: var(--color-01);
-        }
+        color: #59544f;
+        background-color: #201f29;
     }
 }
 
@@ -176,13 +168,34 @@ input[type="submit"] {
 
 input[type="submit"] {
     background-color: var(--color-03);
+    border: var(--border);
+    border-color: var(--color-03);
 
     &:hover {
-        background-color: var(--color-04);
+        background-color: var(--color-03);
+        border-color: var(--color-04);
+
     }
 
     &:active {
-        background-color: var(--color-05);
+        background-color: var(--color-03);
+        border-color: var(--color-05);
+    }
+}
+
+input[type="text"] {
+    background-color: var(--color-bg);
+    border: var(--border);
+    border-color: var(--color-bg);
+
+    &:hover {
+        background-color: var(--color-bg);
+        border-color: var(--color-border);
+    }
+
+    &:active {
+        background-color: var(--color-bg);
+        border-color: var(--color-02);
     }
 }
 

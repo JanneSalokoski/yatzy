@@ -176,6 +176,12 @@ export class GameUI {
             subtotal_slots[i].innerHTML = `<span class='value'>${player.subtotal}</span> <span class='extra ${(player.subtotal - 63) >= 0 ? "green" : ""}'>(${player.subtotal - 63})</span>`;
             bonus_slots[i].textContent = player.bonus ? "50" : "";
             total_slots[i].innerHTML = `<span class='value'>${player.total}</span><span class='extra ${(player.total - winning_total) >= 0 ? "green" : ""}'>(${player.total - winning_total})</span>`;
+
+            if (this.game.current_player == i) {
+                player_slots[i].classList.add("active");
+            } else {
+                player_slots[i].classList.remove("active");
+            }
         })
 
 
@@ -188,6 +194,12 @@ export class GameUI {
                     cell.textContent = "--";
                 } else {
                     cell.textContent = val;
+                }
+
+                if (this.game.current_player == i) {
+                    cell.classList.add("active");
+                } else {
+                    cell.classList.remove("active");
                 }
             })
         })
