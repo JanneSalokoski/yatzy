@@ -206,3 +206,9 @@ svg.die {
     font-family: monospace;
     line-height: 1.5;
 }
+
+.preview {
+    color: var(--color-blue);
+    font-size: 0.8rem;
+    opacity: 0.6;
+}

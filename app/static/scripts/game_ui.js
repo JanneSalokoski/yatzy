@@ -209,11 +209,23 @@ export class GameUI {
             const slot_id = row.id;
 
             row.querySelectorAll(".cell.score").forEach((cell, i) => {
-                const score = this.game.players[i].get_score(slot_id);
-                cell.textContent = score === undefined ? "" : (score === 0 ? "--" : score);
+                const player = this.game.players[i];
+                const is_active = this.game.current_player === i;
+                const score = player.get_score(slot_id);
 
-                const isActive = this.game.current_player === i;
-                set_active_class(cell, isActive);
+                let display = "";
+
+                if (score === undefined) {
+                    if (is_active && this.game._die_values.every(v => v !== undefined)) {
+                        const preview = calculate_score(slot_id, this.game._die_values);
+                        display = `<span class="preview">${preview !== 0 ? preview : ''}</span>`
+                    }
+                } else {
+                    display = score === 0 ? "--" : score;
+                }
+
+                cell.innerHTML = display;
+                cell.classList.toggle("active", is_active);
             });
         });
     }
