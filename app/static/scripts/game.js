@@ -1,35 +1,17 @@
-let my_turn = true;
+function sum(list) {
+    return list.reduce((total, a) => total + a, 0);
+}
 
-let throws_left = 3;
+function random_range(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
 
-let curr_score = 0;
+    return () =>
+        Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
 
-let die_values = {
-    "die-1": { value: 0, locked: false },
-    "die-2": { value: 0, locked: false },
-    "die-3": { value: 0, locked: false },
-    "die-4": { value: 0, locked: false },
-    "die-5": { value: 0, locked: false },
-};
-
-let selected_slot = "";
-
-const slot_names = {
-    "ones": "ykköset",
-    "twos": "kakkoset",
-    "threes": "kolmoset",
-    "fours": "neloset",
-    "fives": "vitoset",
-    "sixes": "kutoset",
-    "pair": "pari",
-    "three-of-a-kind": "kolme samaa",
-    "four-of-a-kind": "neljä samaa",
-    "two-pairs": "kaksi paria",
-    "small-flush": "pieni suora",
-    "big-flush": "iso suora",
-    "full-house": "täyskäsi",
-    "random": "sattuma",
-    "yatzy": "yatzy",
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function load_svg(face) {
@@ -37,75 +19,45 @@ async function load_svg(face) {
     return await res.text();
 }
 
-function load_die_faces() {
-    return [
-        load_svg(1),
-        load_svg(2),
-        load_svg(3),
-        load_svg(4),
-        load_svg(5),
-        load_svg(6)
-    ]
-}
+class Die {
+    constructor(element, game) {
+        this.value = 0;
+        this.locked = false;
+        this.element = element;
+        this.game = game;
 
-function random_range(min, max) {
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
+        this.element.addEventListener("click", () => {
+            this.element.classList.toggle("selected");
+            this.locked = !this.locked;
 
-    return () => {
-        return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
-    }
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-const die_roll_amount = random_range(1, 10);
-const die_roll_time = random_range(5, 20);
-const die_throw = random_range(1, 6);
-
-async function throw_die(die, faces) {
-    if (die.classList.contains("selected")) {
-        return;
+            this.game.update_stats();
+        })
     }
 
-    die.classList.add("rolling");
 
-    let value = 1;
-    for (let i = 0; i < die_roll_amount(); i++) {
-        value = die_throw();
+    async throw() {
+        if (this.element.classList.contains("selected")) {
+            return;
+        }
 
-        die.innerHTML = faces[value - 1];
-        const svg = die.querySelector("svg");
+        this.element.classList.add("rolling");
 
-        await delay(die_roll_time() * 10);
+        let value = 0;
+        for (let i = 0; i < this.game._roll_amount_rng(); i++) {
+            value = this.game._roll_value_rng();
 
-        svg.classList.add("fade-in");
+            this.element.innerHTML = this.game.die_faces[value - 1];
+
+            const svg = this.element.querySelector("svg");
+
+            await delay(this.game._roll_time_rng() * 10);
+
+            svg.classList.add("fade-in");
+        }
+
+        this.value = value;
+        this.element.classList.remove("rolling");
     }
-
-    die_values[die.id].value = value;
-    die.classList.remove("rolling");
-}
-
-function get_dice() {
-    const dice = [
-        document.getElementById("die-1"),
-        document.getElementById("die-2"),
-        document.getElementById("die-3"),
-        document.getElementById("die-4"),
-        document.getElementById("die-5")
-    ];
-
-    dice.forEach(die => {
-        die.addEventListener("click", () => {
-            die.classList.toggle("selected");
-            die_values[die.id].locked = !die_values[die.id].locked;
-            update_stats();
-        });
-    });
-
-    return dice;
 }
 
 function get_group_total(length, values) {
@@ -113,7 +65,7 @@ function get_group_total(length, values) {
     values.forEach(v => counts[v] = (counts[v] || 0) + 1);
 
     let groups = Object.entries(counts)
-        .filter(([num, count]) => count >= length)
+        .filter(([_, count]) => count >= length)
         .map(([num]) => parseInt(num));
 
     if (groups.length === 0) return 0;
@@ -128,7 +80,6 @@ function is_straight(values, expected) {
 }
 
 function calculate_score(slot, values) {
-    console.log(slot, values);
     switch (slot) {
         case 'ones':
             return values.filter(v => v == 1).length;
@@ -184,98 +135,155 @@ function calculate_score(slot, values) {
     }
 }
 
-
-function update_stats() {
-    const throws_element = document.querySelector(".throws-left .value");
-    const selected_element = document.querySelector(".selected .value");
-    const sum_element = document.querySelector(".sum .value");
-    const locked_sum_element = document.querySelector(".locked-sum .value");
-    const max_sum_element = document.querySelector(".max-sum .value");
-    const score_element = document.querySelector(".score .value");
-
-    const selected_slot_name = slot_names[selected_slot];
-
-    const sum = Object.values(die_values)
-        .map(val => val.value)
-        .reduce((total, val) => total + val, 0);
-
-    const locked_sum = Object.values(die_values)
-        .filter(v => v.locked === true)
-        .map(val => val.value)
-        .reduce((total, val) => total + val, 0);
-
-    const free = Object.values(die_values)
-        .filter(v => v.locked === false)
-        .length;
-
-    const max_sum = locked_sum + free * 6;
-
-    const current_score = calculate_score(selected_slot,
-        Object.values(die_values)
-            .map(val => val.value)
-    )
-
-    curr_score = current_score;
-
-    throws_element.textContent = throws_left;
-    selected_element.textContent = selected_slot_name;
-    sum_element.textContent = sum;
-    locked_sum_element.textContent = locked_sum;
-    max_sum_element.textContent = max_sum;
-    score_element.textContent = current_score;
+function update_stats_element(element, value) {
+    element.querySelector(".value").textContent = value;
 }
 
-function get_rows() {
-    return document.querySelectorAll(".row");
-}
+class Game {
+    constructor(players) {
+        this.players = players;
 
-async function init() {
-    const die_faces = await Promise.all(load_die_faces());
-    const dice = get_dice();
+        this.throws_left = 3;
+        this.my_turn = true;
 
-    update_stats();
+        this.current_score = 0;
+        this.selected_slot = "";
 
-    const throw_button = document.getElementById("throw");
-    throw_button.onclick = async (e) => {
-        e.preventDefault();
+        this.dice = this._init_dice(5);
 
-        await Promise.all(dice.map(die => throw_die(die, die_faces)));
+        this._roll_amount_rng = random_range(1, 10);
+        this._roll_time_rng = random_range(5, 20);
+        this._roll_value_rng = random_range(1, 6);
+    }
 
-        throws_left = Math.max(0, throws_left - 1);
-        if (throws_left === 0) {
-            throw_button.disabled = true;
+    async init() {
+        this.die_faces = await this._init_die_faces();
+        this.stats_elements = this._init_stats_elements();
+
+        this._init_rows();
+        this._init_buttons();
+    }
+
+    _init_dice(amount) {
+        return Array(amount)
+            .fill()
+            .map((_, i) => new Die(
+                document.getElementById(`die-${i + 1}`),
+                this
+            ));
+    }
+
+    async _init_die_faces() {
+        return await Promise
+            .all(Array(6)
+                .fill()
+                .map((_, i) => load_svg(i + 1)));
+    }
+
+    _init_stats_elements() {
+        let table = {};
+
+        document.querySelectorAll(".stats li")
+            .forEach(element => {
+                table[element.className] = element;
+            })
+
+        return table;
+    }
+
+    _init_rows() {
+        const rows = document.querySelectorAll(".row");
+        rows
+            .forEach(row =>
+                row.addEventListener("click", () => {
+                    this.selected_slot =
+                        row.id !== this.selected_slot ? row.id : "";
+
+                    rows.forEach(r => {
+                        if (r.id == this.selected_slot) {
+                            r.classList.add("selected");
+                        } else {
+                            r.classList.remove("selected");
+                        }
+                    });
+
+                    this.update_stats();
+                })
+            )
+
+    }
+
+    _init_buttons() {
+        const throw_btn = document.getElementById("throw");
+        const allocate_btn = document.getElementById("allocate");
+
+        throw_btn.onclick = async (e) => {
+            e.preventDefault();
+
+            await Promise.all(this.dice.map(d => d.throw()));
+
+            this.throws_left = Math.max(0, this.throws_left - 1);
+
+            if (this.throws_left == 0) {
+                throw_btn.disabled = true;
+            }
+
+            this.update_stats();
         }
 
-        update_stats();
+        allocate_btn.onclick = () => {
+            const selected_row = document.querySelector(`.row.${this.selected_slot}`);
+            selected_row.querySelector(".score").textContent = this.current_score;
 
+            this.throws_left = 3;
+            throw_btn.disabled = false;
+        }
     }
 
-    const rows = get_rows();
-    rows.forEach(row => {
-        row.addEventListener("click", () => {
-            console.log(row);
-            selected_slot = row.id !== selected_slot ? row.id : "";
-            rows.forEach(r => {
-                if (r.id == selected_slot) {
-                    r.classList.add("selected");
-                } else {
-                    r.classList.remove("selected");
-                }
-            });
-            update_stats();
-        })
-    })
+    die_values(filter = () => true) {
+        return this.dice
+            .filter(filter)
+            .map(d => d.value);
+    }
 
-    const allocate_button = document.querySelector("#allocate");
-    allocate_button.onclick = () => {
-        const selected_row = document.querySelector(`.row.${selected_slot}`);
-        selected_row.querySelector(".score").textContent = curr_score;
+    throw_dice() {
+        this.dice.forEach(d => d.throw());
+    }
 
-        throws_left = 3;
-        throw_button.disabled = false;
+    update_stats() {
+        const die_values = this.die_values();
+        const locked_die_values = this.die_values((d) => d.locked);
+        const free_die_values = this.die_values((d) => !d.locked);
+
+        const total_sum = sum(die_values);
+        const locked_sum = sum(locked_die_values);
+        const free_amount = free_die_values.length;
+
+        const max_sum = locked_sum + free_amount * 6;
+
+        const current_score = calculate_score(this.selected_slot, die_values);
+        this.current_score = current_score;
+
+        update_stats_element(
+            this.stats_elements["throws-left"],
+            this.throws_left
+        );
+
+        update_stats_element(
+            this.stats_elements["selected-slot"],
+            this.selected_slot
+        );
+        update_stats_element(this.stats_elements["total-sum"], total_sum);
+        update_stats_element(this.stats_elements["locked-sum"], locked_sum);
+        update_stats_element(this.stats_elements["max-sum"], max_sum);
+        update_stats_element(this.stats_elements["score"], current_score);
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    init();
-});
+
+async function init() {
+    const game = new Game();
+    await game.init();
+}
+
+window.addEventListener("DOMContentLoaded", init);
