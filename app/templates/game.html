@@ -9,15 +9,50 @@
 <section>
     <h2>Peli</h2>
     <div class="game">
+        <div class="controls">
+            <label>
+                <span class="label">Uusi pelaaja:</span>
+                <input type="text" id="player-name" name="player-name" />
+            </label>
+            <input type="button" id="add-player" value="Lisää pelaaja" />
+            <input type="button" id="start-game" value="Aloita peli" />
+        </div>
+        <div class="stats">
+            <ul>
+                <li class="status"><span class="label">Status</span>: <span class="value"></span></li>
+                <li class="players"><span class="label">Pelaajat</span>: <span class="value"></span></li>
+                <li class="active-player"><span class="label">Aktiivinen pelaaja</span>: <span class="value"></span></li>
+                <li class="throws-left"><span class="label">Heittoja jäljellä</span>: <span class="value"></span></li>
+                <li class="selected-slot"><span class="label">Valittu</span>: <span class="value"></span></li>
+                <li class="total-sum"><span class="label">Summa</span>: <span class="value"></span></li>
+                <li class="locked-sum"><span class="label">Lukittujen summa</span>: <span class="value"></span></li>
+                <li class="max-sum"><span class="label">Maksimisumma</span>: <span class="value"></span></li>
+                <li class="score"><span class="label">Arvo</span>: <span class="value"></span></li>
+            </ul>
+        </div>
+        <div class="throw">
+            <div class="dice">
+            <div class="die" id="die-1"></div>
+            <div class="die" id="die-2"></div>
+            <div class="die" id="die-3"></div>
+            <div class="die" id="die-4"></div>
+            <div class="die" id="die-5"></div>
+            </div>
+            <div class="buttons">
+                <input name="start-turn" id="start-turn" type="button" value="Aloita vuoro" />
+                <input name="throw" id="throw" type="button" value="Heitä noppia" />
+                <input name="allocate" id="allocate" type="button" value="Käytä tulos" />
+            </div>
+        </div>
         <div class="grid">
-            <div class="row ones" id="ones">
+            <div class="row slot ones" id="ones">
                 <div class="cell slot">
                     {% include "includes/svg/die-1.svg" %}
                 </div>
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row twos" id="twos">
+            <div class="row slot twos" id="twos">
                 <div class="cell slot">
                     {% include "includes/svg/die-2.svg" %}
                     {% include "includes/svg/die-2.svg" %}
@@ -25,7 +60,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row threes" id="threes">
+            <div class="row slot threes" id="threes">
                 <div class="cell slot">
                     {% include "includes/svg/die-3.svg" %}
                     {% include "includes/svg/die-3.svg" %}
@@ -34,7 +69,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row fours" id="fours">
+            <div class="row slot fours" id="fours">
                 <div class="cell slot">
                     {% include "includes/svg/die-4.svg" %}
                     {% include "includes/svg/die-4.svg" %}
@@ -44,7 +79,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row fives" id="fives">
+            <div class="row slot fives" id="fives">
                 <div class="cell slot">
                     {% include "includes/svg/die-5.svg" %}
                     {% include "includes/svg/die-5.svg" %}
@@ -55,7 +90,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row sixes" id="sixes">
+            <div class="row slot sixes" id="sixes">
                 <div class="cell slot">
                     {% include "includes/svg/die-6.svg" %}
                     {% include "includes/svg/die-6.svg" %}
@@ -81,7 +116,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row pair" id="pair">
+            <div class="row slot pair" id="pair">
                 <div class="cell slot">
                     {% include "includes/svg/die-2.svg" %}
                     {% include "includes/svg/die-2.svg" %}
@@ -89,7 +124,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row three-of-a-kind" id="three-of-a-kind">
+            <div class="row slot three-of-a-kind" id="three-of-a-kind">
                 <div class="cell slot">
                     {% include "includes/svg/die-3.svg" %}
                     {% include "includes/svg/die-3.svg" %}
@@ -98,7 +133,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row four-of-a-kind" id="four-of-a-kind">
+            <div class="row slot four-of-a-kind" id="four-of-a-kind">
                 <div class="cell slot">
                     {% include "includes/svg/die-4.svg" %}
                     {% include "includes/svg/die-4.svg" %}
@@ -108,7 +143,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row two-pairs" id="two-pairs">
+            <div class="row slot two-pairs" id="two-pairs">
                 <div class="cell slot">
                     {% include "includes/svg/die-2.svg" %}
                     {% include "includes/svg/die-2.svg" %}
@@ -118,7 +153,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row small-flush" id="small-flush">
+            <div class="row slot small-flush" id="small-flush">
                 <div class="cell slot">
                     {% include "includes/svg/die-1.svg" %}
                     {% include "includes/svg/die-2.svg" %}
@@ -129,7 +164,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row big-flush" id="big-flush">
+            <div class="row slot big-flush" id="big-flush">
                 <div class="cell slot">
                     {% include "includes/svg/die-2.svg" %}
                     {% include "includes/svg/die-3.svg" %}
@@ -140,7 +175,7 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row full-house" id="full-house">
+            <div class="row slot full-house" id="full-house">
                 <div class="cell slot">
                     {% include "includes/svg/die-5.svg" %}
                     {% include "includes/svg/die-5.svg" %}
@@ -151,14 +186,14 @@
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row random" id="random">
+            <div class="row slot random" id="random">
                 <div class="cell slot">
                     Sattuma
                 </div>
                 <div class="cell score"></div>
                 <div class="cell score"></div>
             </div>
-            <div class="row yatzy" id="yatzy">
+            <div class="row slot yatzy" id="yatzy">
                 <div class="cell slot">
                     {% include "includes/svg/die-1.svg" %}
                     {% include "includes/svg/die-1.svg" %}
@@ -170,27 +205,13 @@
                 <div class="cell score"></div>
             </div>
         </div>
-        <div class="throw">
-            <div class="dice">
-            <div class="die" id="die-1"></div>
-            <div class="die" id="die-2"></div>
-            <div class="die" id="die-3"></div>
-            <div class="die" id="die-4"></div>
-            <div class="die" id="die-5"></div>
+            <div class="row total" id="total">
+                <div class="cell slot">
+                    Tulos
+                </div>
+                <div class="cell score"></div>
+                <div class="cell score"></div>
             </div>
-            <input name="throw" id="throw" type="button" value="heitä" />
-        </div>
-        <div class="stats">
-            <ul>
-                <li class="throws-left"><span class="label">Heittoja jäljellä</span>: <span class="value"></span></li>
-                <li class="selected-slot"><span class="label">Valittu</span>: <span class="value"></span></li>
-                <li class="total-sum"><span class="label">Summa</span>: <span class="value"></span></li>
-                <li class="locked-sum"><span class="label">Lukittujen summa</span>: <span class="value"></span></li>
-                <li class="max-sum"><span class="label">Maksimisumma</span>: <span class="value"></span></li>
-                <li class="score"><span class="label">Arvo</span>: <span class="value"></span></li>
-            </ul>
-        </div>
-        <input name="allocate" id="allocate" type="button" value="Käytä tulos" />
     </div>
 </section>
 {% endblock %}
