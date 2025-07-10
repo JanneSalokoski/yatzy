@@ -6,6 +6,19 @@
     gap: var(--gap);
 }
 
+.throw {
+    align-items: center;
+
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--gap);
+
+    .buttons {
+        display: flex;
+        gap: var(--gap-s);
+    }
+}
+
 .dice {
     display: flex;
 
@@ -62,7 +75,7 @@ svg.die {
     }
 }
 
-.die.selected {
+.die.locked {
     background-color: var(--color-05);
     border-color: var(--color-05);
 
@@ -93,6 +106,10 @@ svg.die {
     &:last-child {
         border-right: var(--border);
     }
+
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
 .grid .row:last-child .cell {
@@ -134,4 +151,26 @@ svg.die {
     svg {
         background-color: var(--color-03);
     }
+}
+
+.controls {
+    display: grid;
+    gap: var(--gap-s);
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+
+    label {
+        grid-column: 1 / span 2;
+    }
+}
+
+.stats {
+    background-color: var(--color-bg);
+    padding: var(--gap);
+
+    border-radius: var(--border-radius);
+
+    font-family: monospace;
+    line-height: 1.5;
 }
